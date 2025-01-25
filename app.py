@@ -13,7 +13,7 @@ from torchvision import transforms
 port_number = int(os.getenv("PORT", 5000))
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True, expose_headers=["Content-Type"])
 
 # Load the PyTorch model
 class GreenGuruModel(torch.nn.Module):
