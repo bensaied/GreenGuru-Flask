@@ -3,7 +3,7 @@ import threading
 import pandas as pd
 import cv2
 import numpy as np
-from flask_cors import CORS, cross_origin 
+from flask_cors import CORS, cross_origin
 from flask import Flask, jsonify, request
 import torch
 import torch.nn as nn
@@ -13,7 +13,7 @@ from torchvision import transforms
 port_number = int(os.getenv("PORT", 5000))
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allow all origins globally
 
 # Load the PyTorch model
 class GreenGuruModel(torch.nn.Module):
@@ -43,8 +43,6 @@ model = GreenGuruModel(num_classes=12)
 
 # Load the state dictionary from the .pth file
 state_dict = torch.load('GreenGuruPT.pth', map_location=torch.device('cpu'))
-
-
 model.load_state_dict(state_dict)
 model.eval()  # Set the model to evaluation mode
 
@@ -78,18 +76,20 @@ def segmentation(image):
 def home():
     return "Welcome to GreenGuru API!"
 
-
-
 # Health check route
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "running"}), 200
 
 # Predict route
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def predict():
     try:
+        if request.method == 'OPTIONS':
+            # Handle preflight request
+            return jsonify({"status": "preflight"}), 200
+
         if 'file' not in request.files:
             return jsonify({"error": "No file uploaded"}), 400
         file = request.files['file']

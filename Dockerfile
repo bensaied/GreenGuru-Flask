@@ -1,10 +1,13 @@
 # Use a base image with Python and system dependencies
 FROM python:3.9-slim
 
-# Install system dependencies for OpenCV
+# Install system dependencies for OpenCV and other required libraries
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
