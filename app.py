@@ -13,7 +13,7 @@ from torchvision import transforms
 port_number = int(os.getenv("PORT", 5000))
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, expose_headers=["Content-Type"])
+CORS(app)
 
 # Load the PyTorch model
 class GreenGuruModel(torch.nn.Module):
@@ -42,7 +42,12 @@ class GreenGuruModel(torch.nn.Module):
 model = GreenGuruModel(num_classes=12)
 
 # Load the state dictionary from the .pth file
-state_dict = torch.load('GreenGuruPT.pth', map_location=torch.device('cpu'))
+# state_dict = torch.load('GreenGuruPT.pth', map_location=torch.device('cpu'))
+
+# Allowlist specific objects (if needed)
+torch.serialization.add_safe_globals([MyCustomClass])
+state_dict = torch.load('GreenGuruPT.pth', weights_only=True)
+
 model.load_state_dict(state_dict)
 model.eval()  # Set the model to evaluation mode
 
