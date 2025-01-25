@@ -3,7 +3,7 @@ import threading
 import pandas as pd
 import cv2
 import numpy as np
-from flask_cors import CORS, cross_origin
+# from flask_cors import CORS, cross_origin
 from flask import Flask, jsonify, request
 import torch
 import torch.nn as nn
@@ -13,7 +13,17 @@ from torchvision import transforms
 port_number = int(os.getenv("PORT", 5000))
 
 app = Flask(__name__)
-CORS(app)  # Allow all origins globally
+# CORS(app)  # Allow all origins globally
+# Manually set the CORS headers
+@app.after_request
+def after_request(response):
+    # Allow all origins
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    # Allow specific headers
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    # Allow specific methods
+    response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    return response
 
 # Load the PyTorch model
 class GreenGuruModel(torch.nn.Module):
@@ -83,7 +93,7 @@ def health_check():
 
 # Predict route
 @app.route('/predict', methods=['POST', 'OPTIONS'])
-@cross_origin()
+# @cross_origin()
 def predict():
     try:
         if request.method == 'OPTIONS':
