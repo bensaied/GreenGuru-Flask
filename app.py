@@ -3,7 +3,7 @@ import threading
 import pandas as pd
 import cv2
 import numpy as np
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin 
 from flask import Flask, jsonify, request
 import torch
 import torch.nn as nn
@@ -13,7 +13,7 @@ from torchvision import transforms
 port_number = int(os.getenv("PORT", 5000))
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+CORS(app)
 
 # Load the PyTorch model
 class GreenGuruModel(torch.nn.Module):
@@ -87,6 +87,7 @@ def health_check():
 
 # Predict route
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
     try:
         if 'file' not in request.files:
