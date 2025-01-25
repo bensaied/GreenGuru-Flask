@@ -5,4 +5,4 @@ torchvision
 opencv-python
 numpy
 pandas
-opencv-python-headless
+opencv-python
