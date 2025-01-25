@@ -1,7 +1,7 @@
 # Use a base image with Python and system dependencies
 FROM python:3.9-slim
 
-# Install system dependencies
+# Install system dependencies for OpenCV
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
@@ -18,10 +18,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the port
-EXPOSE 5000
+EXPOSE 8080
 
 # Set the environment variable for the port
-ENV PORT=5000
+ENV PORT=8080
 
 # Command to run your app
 CMD ["python", "app.py"]

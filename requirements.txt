@@ -6,3 +6,4 @@ opencv-python
 numpy
 pandas
 opencv-python
+opencv-contrib-python
